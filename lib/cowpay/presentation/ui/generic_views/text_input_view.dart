@@ -95,7 +95,6 @@ class TextInputView extends StatelessWidget {
         initialValue: initialValue ?? null,
         onChanged: (value) => onChange!(mainContext!, value),
         maxLength: maxLength,
-        maxLengthEnforced: true,
         controller: controller,
         enabled: enabled,
         inputFormatters: [
