@@ -3,6 +3,9 @@ library cowpay;
 import 'package:api_manager/api_manager.dart';
 import 'package:api_manager/failures.dart';
 import 'package:cowpay/core/helpers/cowpay_helper.dart';
+import 'package:cowpay/cowpay/data/models/fawry_success_model.dart';
+import 'package:cowpay/cowpay/data/models/payload_model.dart';
+import 'package:cowpay/cowpay/domain/entities/fawry_entity.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
@@ -12,7 +15,7 @@ import 'package:formz/formz.dart';
 
 import 'core/helpers/localization.dart';
 import 'core/helpers/screen_size.dart';
-import 'cowpay/data/models/credit_card_response_model.dart';
+import 'cowpay/data/models/card_success_model.dart';
 import 'cowpay/presentation/bloc/cowpay_bloc.dart';
 import 'cowpay/presentation/ui/generic_views/button_loading_view.dart';
 import 'cowpay/presentation/ui/generic_views/button_view.dart';
@@ -25,6 +28,8 @@ import 'cowpay/presentation/ui/widgets/fawry_widget.dart';
 import 'injection_container.dart';
 
 export 'package:cowpay/core/helpers/enum_models.dart';
+
+export 'cowpay/data/models/card_success_model.dart';
 
 class Cowpay extends StatefulWidget {
   Cowpay({
@@ -48,8 +53,10 @@ class Cowpay extends StatefulWidget {
     this.textFieldStyle,
     this.textFieldInputDecoration,
     this.localizationCode,
-    required this.onSuccess,
+    required this.onCreditCardSuccess,
+    required this.onFawrySuccess,
     required this.onError,
+    required this.onClosedByUser,
   }) : super(key: key);
 
   final String description, merchantReferenceId, customerMerchantProfileId;
@@ -69,7 +76,9 @@ class Cowpay extends StatefulWidget {
   final TextStyle? buttonTextStyle, textFieldStyle;
   final InputDecoration? textFieldInputDecoration;
   final LocalizationCode? localizationCode;
-  final Function(CreditCardResponseModel creditCardResponseModel) onSuccess;
+  final Function(CreditCardSuccessModel cardSuccessModel) onCreditCardSuccess;
+  final Function(FawrySuccessModel fawrySuccessModel) onFawrySuccess;
+  final Function onClosedByUser;
   final Function(dynamic error) onError;
 
   @override
@@ -102,109 +111,119 @@ class _CowpayState extends State<Cowpay> with SingleTickerProviderStateMixin {
       Localization().localizationMap = localizationMapAr;
       Localization().localizationCode = LocalizationCode.ar;
     }
+    Future<bool> _willPopCallback() async {
+      widget.onClosedByUser();
+      return Future.value(true);
+    }
 
-    return Directionality(
-      textDirection: widget.localizationCode == LocalizationCode.ar
-          ? TextDirection.rtl
-          : TextDirection.ltr,
-      child: Scaffold(
-        backgroundColor: Colors.white,
-        resizeToAvoidBottomInset: false,
-        appBar: AppBar(
-          toolbarHeight: 0.1.sh,
-          title: Text(Localization().localizationMap["paymentMethod"]),
-          backgroundColor: Color(0xff3D1A54),
-        ),
-        body: DefaultTabController(
-          length: 2,
-          child: MultiBlocProvider(
-            providers: [
-              BlocProvider<CowpayBloc>(
-                create: (context) {
-                  return di<CowpayBloc>()
-                    ..add(CowpayStarted(
-                        merchantReferenceId: widget.merchantReferenceId,
-                        customerMerchantProfileId:
-                            widget.customerMerchantProfileId,
-                        amount: widget.amount.toString(),
-                        customerEmail: widget.customerEmail,
-                        customerMobile: widget.customerMobile,
-                        customerName: widget.customerName,
-                        description: widget.description));
-                },
-              ),
-            ],
-            child: MultiBlocListener(
-              listeners: [
-                BlocListener<CowpayBloc, CowpayState>(
-                  listenWhen: (prev, state) {
-                    return prev.status != state.status;
-                  },
-                  listener: (context, state) {},
-                ),
-                BlocListener<CowpayBloc, CowpayState>(
-                  listenWhen: (prev, state) {
-                    return prev.failure != state.failure;
-                  },
-                  listener: (context, state) {
-                    final failure = state.failure;
-                    if (failure is ErrorFailure) {
-                      final error = failure.error;
-                      if (error is MessageResponse) {
-                        ErrorAlertView alertView = ErrorAlertView(
-                            context: context,
-                            content: error.message,
-                            dialogType: DialogType.DIALOG_WARNING);
-                        alertView.ackAlert();
-                      }
-                    } else if (failure != null) {
-                      ErrorAlertView alertView = ErrorAlertView(
-                          context: context,
-                          content: "Error",
-                          dialogType: DialogType.DIALOG_WARNING);
-                      alertView.ackAlert();
-                    }
+    return WillPopScope(
+      onWillPop: _willPopCallback,
+      child: Directionality(
+        textDirection: widget.localizationCode == LocalizationCode.ar
+            ? TextDirection.rtl
+            : TextDirection.ltr,
+        child: Scaffold(
+          backgroundColor: Colors.white,
+          resizeToAvoidBottomInset: false,
+          appBar: AppBar(
+            toolbarHeight: 0.1.sh,
+            title: Text(Localization().localizationMap["paymentMethod"]),
+            backgroundColor: Color(0xff3D1A54),
+          ),
+          body: DefaultTabController(
+            length: 2,
+            child: MultiBlocProvider(
+              providers: [
+                BlocProvider<CowpayBloc>(
+                  create: (context) {
+                    return di<CowpayBloc>()
+                      ..add(CowpayStarted(
+                          merchantReferenceId: widget.merchantReferenceId,
+                          customerMerchantProfileId:
+                              widget.customerMerchantProfileId,
+                          amount: widget.amount.toString(),
+                          customerEmail: widget.customerEmail,
+                          customerMobile: widget.customerMobile,
+                          customerName: widget.customerName,
+                          description: widget.description));
                   },
                 ),
               ],
-              child: Column(
-                children: [
-                  _buildTabBar(),
-                  Expanded(
-                    child: TabBarView(
-                        controller: _tabController,
-                        physics: NeverScrollableScrollPhysics(),
-                        children: [
-                          CreditCardWidget(
-                            textFieldStyle: widget.textFieldStyle,
-                            textFieldInputDecoration:
-                                widget.textFieldInputDecoration,
-                          ),
-                          FawryWidget(),
-                        ]),
+              child: MultiBlocListener(
+                listeners: [
+                  BlocListener<CowpayBloc, CowpayState>(
+                    listenWhen: (prev, state) {
+                      return prev.status != state.status;
+                    },
+                    listener: (context, state) {},
                   ),
-                  Container(
-                    height: 0.26.sh,
-                    padding: EdgeInsets.symmetric(horizontal: 0.04.sw),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        CowpayPaymentOptionsCard(),
-                        Container(
-                          height: 0.07.sh,
-                          margin: EdgeInsets.symmetric(vertical: 0.01.sh),
-                          child: _ChargeButton(
-                            buttonColor: Color(0xff3D1A54),
-                            buttonTextColor: widget.buttonTextColor,
-                            buttonTextStyle: widget.buttonTextStyle,
-                            onSuccess: (val) => widget.onSuccess(val),
-                            onError: (error) => widget.onError(error),
-                          ),
-                        ),
-                      ],
-                    ),
-                  )
+                  BlocListener<CowpayBloc, CowpayState>(
+                    listenWhen: (prev, state) {
+                      return prev.failure != state.failure;
+                    },
+                    listener: (context, state) {
+                      final failure = state.failure;
+                      if (failure is ErrorFailure) {
+                        final error = failure.error;
+                        if (error is MessageResponse) {
+                          ErrorAlertView alertView = ErrorAlertView(
+                              context: context,
+                              content: error.message,
+                              dialogType: DialogType.DIALOG_WARNING);
+                          alertView.ackAlert();
+                        }
+                      } else if (failure != null) {
+                        ErrorAlertView alertView = ErrorAlertView(
+                            context: context,
+                            content: "Error",
+                            dialogType: DialogType.DIALOG_WARNING);
+                        alertView.ackAlert();
+                      }
+                    },
+                  ),
                 ],
+                child: Column(
+                  children: [
+                    _buildTabBar(),
+                    Expanded(
+                      child: TabBarView(
+                          controller: _tabController,
+                          physics: NeverScrollableScrollPhysics(),
+                          children: [
+                            CreditCardWidget(
+                              textFieldStyle: widget.textFieldStyle,
+                              textFieldInputDecoration:
+                                  widget.textFieldInputDecoration,
+                            ),
+                            FawryWidget(),
+                          ]),
+                    ),
+                    Container(
+                      height: 0.26.sh,
+                      padding: EdgeInsets.symmetric(horizontal: 0.04.sw),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          CowpayPaymentOptionsCard(),
+                          Container(
+                            height: 0.07.sh,
+                            margin: EdgeInsets.symmetric(vertical: 0.01.sh),
+                            child: _ChargeButton(
+                              buttonColor: Color(0xff3D1A54),
+                              buttonTextColor: widget.buttonTextColor,
+                              buttonTextStyle: widget.buttonTextStyle,
+                              onCreditCardSuccess: (val) =>
+                                  widget.onCreditCardSuccess(val),
+                              onError: (error) => widget.onError(error),
+                              onClosedByUser: widget.onClosedByUser,
+                              onFawrySuccess: widget.onFawrySuccess,
+                            ),
+                          ),
+                        ],
+                      ),
+                    )
+                  ],
+                ),
               ),
             ),
           ),
@@ -313,7 +332,9 @@ class _CowpayState extends State<Cowpay> with SingleTickerProviderStateMixin {
 class _ChargeButton extends StatelessWidget {
   final Color? buttonColor, buttonTextColor;
   final TextStyle? buttonTextStyle;
-  final Function(CreditCardResponseModel creditCardResponseModel) onSuccess;
+  final Function(CreditCardSuccessModel cardSuccessModel) onCreditCardSuccess;
+  final Function(FawrySuccessModel fawrySuccessModel) onFawrySuccess;
+  final Function onClosedByUser;
   final Function(dynamic error) onError;
 
   /*final double amount;*/
@@ -322,7 +343,9 @@ class _ChargeButton extends StatelessWidget {
     this.buttonTextStyle,
     this.buttonColor,
     this.buttonTextColor,
-    required this.onSuccess,
+    required this.onFawrySuccess,
+    required this.onClosedByUser,
+    required this.onCreditCardSuccess,
     required this.onError,
     /*required this.amount*/
   });
@@ -336,21 +359,31 @@ class _ChargeButton extends StatelessWidget {
         if (state.status.isSubmissionSuccess) {
           if (currentIndex == 0) {
             context.read<CowpayBloc>().add(ClearStatus());
-            SchedulerBinding.instance!.addPostFrameCallback((_) {
-              Navigator.push(
+            SchedulerBinding.instance!.addPostFrameCallback((_) async {
+              PayLoadModel? payLoadModel = await Navigator.push(
                 context,
                 MaterialPageRoute(
                   builder: (context) => WebViewScreen(
                     creditCardEntity: state.creditCardEntity!,
+                    onError: onError,
                   ),
                 ),
               );
+              if (payLoadModel != null) {
+                CreditCardSuccessModel cardSuccessModel =
+                    CreditCardSuccessModel(
+                        cowpayReferenceId: payLoadModel.cowpayReferenceId,
+                        paymentGatewayReferenceId:
+                            payLoadModel.paymentGatewayReferenceId);
+
+                onCreditCardSuccess(cardSuccessModel);
+              }
+              Navigator.pop(context);
             });
-            // onSuccess(state.creditCardResponseModel!);
           } else {
             context.read<CowpayBloc>().add(ClearStatus());
-            SchedulerBinding.instance!.addPostFrameCallback((_) {
-              Navigator.push(
+            SchedulerBinding.instance!.addPostFrameCallback((_) async {
+              FawryEntity? fawryEntity = await Navigator.push(
                 context,
                 MaterialPageRoute(
                   builder: (context) => FawryScreen(
@@ -358,6 +391,15 @@ class _ChargeButton extends StatelessWidget {
                   ),
                 ),
               );
+              if (fawryEntity != null) {
+                FawrySuccessModel fawrySuccessModel = FawrySuccessModel(
+                    cowpayReferenceId: fawryEntity.cowpayReferenceId.toString(),
+                    paymentGatewayReferenceId:
+                        fawryEntity.paymentGatewayReferenceId,
+                    merchantReferenceId: fawryEntity.merchantReferenceId);
+                onFawrySuccess(fawrySuccessModel);
+                Navigator.pop(context);
+              }
             });
           }
         } else if (state.status.isSubmissionFailure) onError(state.errorModel);

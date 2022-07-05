@@ -26,9 +26,6 @@ class FawryScreen extends StatelessWidget {
       child: Scaffold(
         backgroundColor: Colors.white,
         resizeToAvoidBottomInset: false,
-        appBar: AppBar(
-          backgroundColor: Color(0xff3D1A54),
-        ),
         body: Column(
           children: [
             SingleChildScrollView(
@@ -94,7 +91,7 @@ class FawryScreen extends StatelessWidget {
                               Localization().localizationMap["paymentSteps"],
                               style: TextStyle(
                                   color: Colors.black,
-                                  fontSize: 18,
+                                  fontSize: 18.sp,
                                   fontWeight: FontWeight.bold),
                             ),
                             SizedBox(
@@ -103,31 +100,54 @@ class FawryScreen extends StatelessWidget {
                             Text(
                               Localization().localizationMap["FawrySteps1"],
                               style: TextStyle(
-                                  color: Color(0xff9B9B9C), fontSize: 15),
+                                  color: Color(0xff9B9B9C), fontSize: 15.sp),
                             ),
                             Text(
                               Localization().localizationMap["FawrySteps2"],
                               style: TextStyle(
-                                  color: Color(0xff9C9C9D), fontSize: 15),
+                                  color: Color(0xff9C9C9D), fontSize: 15.sp),
                             ),
                             Text(
-                              Localization().localizationMap["FawrySteps3"],
+                              "${Localization().localizationMap["FawrySteps3"]}: ${fawryEntity.paymentGatewayReferenceId}",
                               style: TextStyle(
-                                  color: Color(0xff9B9B9C), fontSize: 15),
+                                  color: Color(0xff9B9B9C), fontSize: 15.sp),
                             ),
                             Text(
                               Localization().localizationMap["FawrySteps4"],
                               style: TextStyle(
-                                  color: Color(0xff9B9B9C), fontSize: 15),
+                                  color: Color(0xff9B9B9C), fontSize: 15.sp),
                             ),
                             Text(
                               Localization().localizationMap["FawrySteps5"],
                               style: TextStyle(
-                                  color: Color(0xff9B9B9C), fontSize: 15),
+                                  color: Color(0xff9B9B9C), fontSize: 15.sp),
                             ),
                           ],
                         ),
                       ],
+                    ),
+                  ),
+                  SizedBox(height: 10.sp),
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 0.25.sw),
+                    child: ButtonView(
+                      fontWeight: FontWeight.w300,
+                      // title: 'PAY  $amount EGP',
+                      child: Text(Localization().localizationMap["back"],
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 0.025.sh,
+                              color: Color(0xff3D1A54)),
+                          textScaleFactor: 1),
+                      textColor: Color(0xff3D1A54),
+                      fontSize: 0.025,
+                      backgroundColor: Colors.white,
+                      borderColor: Color(0xff3D1A54),
+                      mainContext: context,
+                      // buttonTextStyle: buttonTextStyle,
+                      onClickFunction: (context) {
+                        Navigator.of(context).pop(fawryEntity);
+                      },
                     ),
                   ),
                 ],

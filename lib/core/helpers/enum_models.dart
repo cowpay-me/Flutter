@@ -126,7 +126,9 @@ Map<String, String> localizationMapEn = {
   "FawrySteps4": "• Make sure your data is correct",
   "FawrySteps5": "• Pay and keep the receipt",
   "cowpayPaymentOptionsText":
-      "Create & Manage Payment Links For Your Business Seamlessly"
+      "Create & Manage Payment Links For Your Business Seamlessly",
+  "back": "Back",
+  "someThingWentWrong": "Something went wrong, please try again later"
 };
 
 Map<String, String> localizationMapAr = {
@@ -148,5 +150,14 @@ Map<String, String> localizationMapAr = {
   "creditCard": "بطاقة ائتمان",
   "fawryPayPlaceholderMessage": "برجاء الضغط على زر الدفع لاستخراج الرقم",
   "confirmPayment": "ادفع",
-  "confirmPayment": "ادفع"
+  "copyCode": "نسخ الكود",
+  "paymentSteps": "• خطوات الدفع:",
+  "FawrySteps1": "• اذهب الى فرع فوري",
+  "FawrySteps2": "• اختر فوري باي من القائمة الرئيسية",
+  "FawrySteps3": "• ادخل الرقم الرقم المرجعي",
+  "FawrySteps4": "• التأكد من صحة البيانات",
+  "FawrySteps5": "• ادفع و احتفظ بالفاتورة",
+  "cowpayPaymentOptionsText": "إنشاء وإدارة روابط الدفع لعملك بكل سهولة",
+  "back": "رجوع",
+  "someThingWentWrong": "حدث خطأ ما ، برجاء المحاولة لاحقا"
 };

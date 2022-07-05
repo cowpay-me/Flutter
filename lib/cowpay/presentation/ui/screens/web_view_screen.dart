@@ -1,6 +1,7 @@
 library cowpay;
 
 import 'dart:async';
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:cowpay/core/helpers/cowpay_helper.dart';
@@ -11,12 +12,15 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
+import '../../../data/models/payload_model.dart';
+
 export 'package:cowpay/core/helpers/enum_models.dart';
 
 class WebViewScreen extends StatefulWidget {
   final CreditCardEntity creditCardEntity;
+  final Function(dynamic error) onError;
 
-  WebViewScreen({required this.creditCardEntity});
+  WebViewScreen({required this.creditCardEntity, required this.onError});
 
   @override
   State<WebViewScreen> createState() => _WebViewScreenState();
@@ -59,18 +63,14 @@ class _WebViewScreenState extends State<WebViewScreen> {
                   print("WebView is loading (progress : $progress%)");
                 },
                 javascriptChannels: <JavascriptChannel>{
-                  _toasterJavascriptChannel(context),
+                  _javascriptChannel(context),
                 },
-                navigationDelegate: (NavigationRequest request) {
-                  if (request.url.contains('SUCCESS')) {
-                    _successDialog(context);
-                    return NavigationDecision.prevent;
-                  } else if (request.url.contains('URL3')) {
-                    _errorDialog(context);
-                    return NavigationDecision.prevent;
-                  } else
-                    return NavigationDecision.navigate;
-                },
+                // navigationDelegate: (NavigationRequest request) {
+                //   if (request.url.contains('SUCCESS')) {
+                //     return NavigationDecision.navigate;
+                //   } else
+                //     return NavigationDecision.navigate;
+                // },
                 onPageStarted: (String url) {
                   print('Page started loading: $url');
                 },
@@ -86,20 +86,22 @@ class _WebViewScreenState extends State<WebViewScreen> {
     );
   }
 
-  JavascriptChannel _toasterJavascriptChannel(BuildContext context) {
+  JavascriptChannel _javascriptChannel(BuildContext context) {
     return JavascriptChannel(
-        name: 'Toaster',
-        onMessageReceived: (JavascriptMessage message) {
-          // ignore: deprecated_member_use
-          Scaffold.of(context).showSnackBar(
-            SnackBar(content: Text(message.message)),
-          );
+        name: 'FlutterBridge',
+        onMessageReceived: (message) {
+          PayLoadModel model =
+              PayLoadModel.fromJson(jsonDecode(message.message));
+          if (model.paymentStatus == 'PAID') {
+            _successDialog(context, model);
+          } else {
+            _errorDialog(context);
+          }
         });
   }
 
   Future<void> _successDialog(
-    BuildContext _context,
-  ) {
+      BuildContext _context, PayLoadModel payLoadModel) {
     return showDialog(
         context: _context,
         barrierDismissible: false,
@@ -110,7 +112,7 @@ class _WebViewScreenState extends State<WebViewScreen> {
             content: "Your Payment Successfully Done",
             onCLick: (_) {
               //TODO: do onSuccess
-              Navigator.of(context).pop();
+              Navigator.of(context).pop(payLoadModel);
             },
             mainContext: _context,
             // title: 'Success',
@@ -118,9 +120,7 @@ class _WebViewScreenState extends State<WebViewScreen> {
         });
   }
 
-  Future<void> _errorDialog(
-    BuildContext _context,
-  ) {
+  Future<void> _errorDialog(BuildContext _context) {
     return showDialog(
         context: _context,
         barrierDismissible: false,
@@ -129,9 +129,10 @@ class _WebViewScreenState extends State<WebViewScreen> {
             // title: "Error",
             dialogType: DialogType.DIALOG_ERROR,
             actionText: "done",
-            content: "Something went wrong, please try again later",
+            content: Localization().localizationMap["someThingWentWrong"],
             onCLick: (_) {
-              //TODO: do onError
+              widget.onError(
+                  Localization().localizationMap["someThingWentWrong"]);
               Navigator.of(context).pop();
             },
             mainContext: _context,

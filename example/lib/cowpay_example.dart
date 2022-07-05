@@ -16,12 +16,6 @@ class CowpayExample extends StatelessWidget {
   String merchantCode = "Bi0InJ1bp5gh";
   String merchantHash =
       "\$2y\$10\$06g0SeTNKoFD0SU1aKcO9.ProYRS4.mk8gyUW82VUJ2KKwtiNb30G";
-  // String token;
-  // String merchantCode;
-  // String merchantHash ;
-
-  // CreditCardExample({required this.token,required this.merchantCode,required this.merchantHash});
-
   @override
   Widget build(BuildContext context) {
     return Cowpay(
@@ -37,12 +31,17 @@ class CowpayExample extends StatelessWidget {
       merchantCode: merchantCode,
       merchantHash: merchantHash,
       token: token,
-      onSuccess: (val) {
-        debugPrint(val.statusDescription);
-        // Navigator.pop(context);
+      onCreditCardSuccess: (val) {
+        debugPrint(val.cowpayReferenceId);
       },
       onError: (val) {
         debugPrint(val.toString());
+      },
+      onClosedByUser: () {
+        debugPrint("closedByUser");
+      },
+      onFawrySuccess: (val) {
+        debugPrint(val.paymentGatewayReferenceId);
       },
     );
   }
