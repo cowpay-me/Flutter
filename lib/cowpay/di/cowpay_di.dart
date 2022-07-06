@@ -86,24 +86,26 @@ class CowpayDI {
   final GetIt di;
 
   void call() {
-    di
-      ..registerFactory(() => CowpayBloc(
-            fawryUseCase: di(),
-            creditCardUseCase: di(),
-            cashCollectionUseCase: di(),
-          ))
-      ..registerLazySingleton<RemoteDataSource>(
-          () => RemoteDataSourceImpl(di()))
-      ..registerLazySingleton<CowpayRepository>(
-          () => CowpayRepositoryImpl(remoteDataSource: di()))
-      ..registerLazySingleton(() => CreditCardUseCase(
-            repository: di(),
-          ))
-      ..registerLazySingleton(() => CashCollectionUseCase(
-            repository: di(),
-          ))
-      ..registerLazySingleton(() => FawryUseCase(
-            repository: di(),
-          ));
+    if (!di.isRegistered<RemoteDataSource>()) {
+      di
+        ..registerFactory(() => CowpayBloc(
+              fawryUseCase: di(),
+              creditCardUseCase: di(),
+              cashCollectionUseCase: di(),
+            ))
+        ..registerLazySingleton<RemoteDataSource>(
+            () => RemoteDataSourceImpl(di()))
+        ..registerLazySingleton<CowpayRepository>(
+            () => CowpayRepositoryImpl(remoteDataSource: di()))
+        ..registerLazySingleton(() => CreditCardUseCase(
+              repository: di(),
+            ))
+        ..registerLazySingleton(() => CashCollectionUseCase(
+              repository: di(),
+            ))
+        ..registerLazySingleton(() => FawryUseCase(
+              repository: di(),
+            ));
+    }
   }
 }
