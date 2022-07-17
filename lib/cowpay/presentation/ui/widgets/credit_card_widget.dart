@@ -225,7 +225,7 @@ class CreditCardWidget extends StatelessWidget {
             ],
             onChange: onChangeCreditCardExpiryMonth,
             isNotValid: isInValid,
-            hintText: "MM",
+            hintText: Localization().localizationMap["mm"],
             value: state.creditCardExpiryMonth.value,
           );
         });
@@ -250,7 +250,7 @@ class CreditCardWidget extends StatelessWidget {
             list: state.yearsList ?? [],
             onChange: onChangeCreditCardExpiryYear,
             isNotValid: isInValid,
-            hintText: "YY",
+            hintText: Localization().localizationMap["yy"],
             value: state.creditCardExpiryYear.value,
           );
         });
