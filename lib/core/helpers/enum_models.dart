@@ -37,9 +37,9 @@ extension DialogTypeExtension on DialogType {
       case DialogType.DIALOG_INFO:
         return 'resources/images/info_icon.svg';
       case DialogType.DIALOG_WARNING:
-        return 'assets/logos-visa.svg';
+        return 'assets/error.svg';
       case DialogType.DIALOG_ERROR:
-        return 'assets/warning.svg';
+        return 'assets/error.svg';
       default:
         return 'resources/images/info_icon.svg';
     }
@@ -128,7 +128,9 @@ Map<String, String> localizationMapEn = {
   "cowpayPaymentOptionsText":
       "Create & Manage Payment Links For Your Business Seamlessly",
   "back": "Back",
-  "someThingWentWrong": "Something went wrong, please try again later"
+  "someThingWentWrong": "Something went wrong, please try again later",
+  "ok": "OK",
+  "error": "Error"
 };
 
 Map<String, String> localizationMapAr = {
@@ -159,5 +161,7 @@ Map<String, String> localizationMapAr = {
   "FawrySteps5": "• ادفع و احتفظ بالفاتورة",
   "cowpayPaymentOptionsText": "إنشاء وإدارة روابط الدفع لعملك بكل سهولة",
   "back": "رجوع",
-  "someThingWentWrong": "حدث خطأ ما ، برجاء المحاولة لاحقا"
+  "someThingWentWrong": "حدث خطأ ما ، برجاء المحاولة لاحقا",
+  "ok": "حسنا",
+  "error": "خطأ"
 };

@@ -17,8 +17,9 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:formz/formz.dart';
 
-part 'cowpay_event.dart';
+import '../../../core/helpers/nullable.dart';
 
+part 'cowpay_event.dart';
 part 'cowpay_state.dart';
 
 class CowpayBloc extends Bloc<CowpayEvent, CowpayState> {
@@ -70,7 +71,10 @@ class CowpayBloc extends Bloc<CowpayEvent, CowpayState> {
   Stream<CowpayState> _mapChargeFawryToState(
     CowpayState state,
   ) async* {
-    yield state.copyWith(status: FormzStatus.submissionInProgress);
+    yield state.copyWith(
+        status: FormzStatus.submissionInProgress,
+        failure: Nullable(null),
+        fawryResponseModel: Nullable(null));
     try {
       String signature = CowpayHelper().generateSignature(
         state.merchantReferenceId ?? '',
@@ -93,7 +97,7 @@ class CowpayBloc extends Bloc<CowpayEvent, CowpayState> {
       yield* _eitherStateOrErrorState<FawryEntity>(responseOrFailure, state);
     } catch (error) {
       yield state.copyWith(
-          status: FormzStatus.submissionFailure, errorModel: error);
+          status: FormzStatus.submissionFailure, errorModel: Nullable(error));
     }
   }
 
@@ -143,8 +147,7 @@ class CowpayBloc extends Bloc<CowpayEvent, CowpayState> {
     validationListState.add(Formz.validate([creditCardCvv]));
     validationListState.add(Formz.validate([creditCardExpiryMonth]));
     validationListState.add(Formz.validate([creditCardExpiryYear]));
-    if (validationListState.where((element) => element.isInvalid).isEmpty &&
-        !state.isNotValidExpirationDate)
+    if (validationListState.where((element) => element.isInvalid).isEmpty)
       yield* _mapRegisterSubmittedToState(
           state,
           creditCardHolderName,
@@ -184,7 +187,10 @@ class CowpayBloc extends Bloc<CowpayEvent, CowpayState> {
       CreditCardExpiryMonth creditCardExpiryMonth,
       CreditCardExpiryYear creditCardExpiryYear,
       int length) async* {
-    yield state.copyWith(status: FormzStatus.submissionInProgress);
+    yield state.copyWith(
+        status: FormzStatus.submissionInProgress,
+        failure: Nullable(null),
+        creditCardEntity: Nullable(null));
     try {
       String signature = CowpayHelper().generateSignature(
         state.merchantReferenceId ?? '',
@@ -230,7 +236,7 @@ class CowpayBloc extends Bloc<CowpayEvent, CowpayState> {
           notValid: length);
 
       yield state.copyWith(
-          status: FormzStatus.submissionFailure, errorModel: error);
+          status: FormzStatus.submissionFailure, errorModel: Nullable(error));
     }
   }
 
@@ -321,18 +327,18 @@ class CowpayBloc extends Bloc<CowpayEvent, CowpayState> {
       (failure) {
         return state.copyWith(
           status: FormzStatus.submissionFailure,
-          failure: failure,
+          failure: Nullable(failure),
         );
       },
       (response) {
         if (response is FawryEntity) {
           return state.copyWith(
               status: FormzStatus.submissionSuccess,
-              fawryResponseModel: response);
+              fawryResponseModel: Nullable(response));
         } else if (response is CreditCardEntity) {
           return state.copyWith(
               status: FormzStatus.submissionSuccess,
-              creditCardEntity: response);
+              creditCardEntity: Nullable(response));
         }
         return state.copyWith(
           status: FormzStatus.submissionSuccess,

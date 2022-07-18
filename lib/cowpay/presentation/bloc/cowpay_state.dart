@@ -67,12 +67,12 @@ class CowpayState extends Equatable {
       String? customerName,
       String? customerEmail,
       String? customerMobile,
-      Failure? failure,
+      Nullable<Failure?>? failure,
       String? amount,
       String? description,
-      CreditCardEntity? creditCardEntity,
-      FawryEntity? fawryResponseModel,
-      dynamic? errorModel,
+      Nullable<CreditCardEntity?>? creditCardEntity,
+      Nullable<FawryEntity?>? fawryResponseModel,
+      Nullable<dynamic?>? errorModel,
       List<String>? yearsList,
       int? tabCurrentIndex}) {
     return CowpayState(
@@ -95,11 +95,15 @@ class CowpayState extends Equatable {
         customerMobile: customerMobile ?? this.customerMobile,
         amount: amount ?? this.amount,
         description: description ?? this.description,
-        creditCardEntity: creditCardEntity ?? this.creditCardEntity,
-        fawryEntity: fawryResponseModel ?? this.fawryEntity,
+        creditCardEntity: creditCardEntity == null
+            ? this.creditCardEntity
+            : creditCardEntity.value,
+        fawryEntity: fawryResponseModel == null
+            ? this.fawryEntity
+            : fawryResponseModel.value,
         errorModel: errorModel ?? this.errorModel,
         customerName: customerName ?? this.customerName,
-        failure: failure ?? this.failure,
+        failure: failure == null ? this.failure : failure.value,
         tabCurrentIndex: tabCurrentIndex ?? this.tabCurrentIndex);
   }
 

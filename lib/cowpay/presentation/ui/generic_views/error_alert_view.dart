@@ -1,6 +1,7 @@
 import 'package:cowpay/core/helpers/enum_models.dart';
 import 'package:flutter/material.dart';
 
+import '../../../../core/helpers/localization.dart';
 import 'dialog_view.dart';
 
 class ErrorAlertView {
@@ -18,7 +19,7 @@ class ErrorAlertView {
         builder: (BuildContext context) {
           return DialogView(
             dialogType: dialogType,
-            actionText: "ok",
+            actionText: Localization().localizationMap["ok"],
             title: content,
             // content: content,
             onCLick: (_) {

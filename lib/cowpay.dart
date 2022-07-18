@@ -175,7 +175,7 @@ class _CowpayState extends State<Cowpay> with SingleTickerProviderStateMixin {
                       } else if (failure != null) {
                         ErrorAlertView alertView = ErrorAlertView(
                             context: context,
-                            content: "Error",
+                            content: Localization().localizationMap["error"],
                             dialogType: DialogType.DIALOG_WARNING);
                         alertView.ackAlert();
                       }

@@ -19,7 +19,7 @@ class CowpayExample extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Cowpay(
-      localizationCode: LocalizationCode.ar,
+      localizationCode: LocalizationCode.en,
       amount: amount,
       customerEmail: customerEmail,
       customerMobile: customerMobile,

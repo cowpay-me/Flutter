@@ -56,12 +56,12 @@ class DialogView extends StatelessWidget {
               : dialogType.image != null
                   ? Container(
                       height: 0.1.sh,
-                      width: 0.1.sw,
+                      width: 0.1.sh,
                       child: SvgPicture.asset(
                         dialogType.image ?? '',
                         package: 'cowpay',
-                        width: 40,
-                        height: 40,
+                        width: 0.1.sh,
+                        height: 0.1.sh,
                       ),
                     )
                   : Container(height: 0.1.sh, width: 0.1.sw),
@@ -70,9 +70,7 @@ class DialogView extends StatelessWidget {
           ),
           Text(
             title ?? 'Title',
-            textAlign: dialogType == DialogType.DIALOG_WARNING
-                ? TextAlign.start
-                : TextAlign.center,
+            textAlign: TextAlign.center,
             style: TextStyle(
                 color: Color(0xff808080),
                 height: 1.4,

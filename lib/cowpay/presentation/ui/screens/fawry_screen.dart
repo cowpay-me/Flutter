@@ -36,20 +36,20 @@ class FawryScreen extends StatelessWidget {
                   ),
                   Text(
                     'Fawry Code',
-                    style: TextStyle(color: Colors.black, fontSize: 17),
+                    style: TextStyle(color: Colors.black, fontSize: 17.sp),
                   ),
                   SizedBox(
-                    height: 10,
+                    height: 10.sp,
                   ),
                   Text(
                     fawryEntity.paymentGatewayReferenceId ?? '',
                     style: TextStyle(
                         color: Color(0xff3D1A54),
-                        fontSize: 35,
+                        fontSize: 35.sp,
                         fontWeight: FontWeight.bold),
                   ),
                   SizedBox(
-                    height: 20,
+                    height: 20.sp,
                   ),
                   Padding(
                     padding: EdgeInsets.symmetric(horizontal: 0.25.sw),
@@ -63,7 +63,7 @@ class FawryScreen extends StatelessWidget {
                               color: Colors.white),
                           textScaleFactor: 1),
                       textColor: Colors.white,
-                      fontSize: 0.025,
+                      fontSize: 0.025.sp,
                       backgroundColor: Color(0xff3D1A54).withOpacity(0.86),
                       mainContext: context,
                       // buttonTextStyle: buttonTextStyle,
@@ -78,7 +78,7 @@ class FawryScreen extends StatelessWidget {
                     ),
                   ),
                   SizedBox(
-                    height: 30,
+                    height: 30.sp,
                   ),
                   Padding(
                     padding: EdgeInsets.symmetric(horizontal: 0.03.sw),
@@ -95,7 +95,7 @@ class FawryScreen extends StatelessWidget {
                                   fontWeight: FontWeight.bold),
                             ),
                             SizedBox(
-                              height: 10,
+                              height: 10.sp,
                             ),
                             Text(
                               Localization().localizationMap["FawrySteps1"],
@@ -140,7 +140,7 @@ class FawryScreen extends StatelessWidget {
                               color: Color(0xff3D1A54)),
                           textScaleFactor: 1),
                       textColor: Color(0xff3D1A54),
-                      fontSize: 0.025,
+                      fontSize: 0.025.sp,
                       backgroundColor: Colors.white,
                       borderColor: Color(0xff3D1A54),
                       mainContext: context,
@@ -163,7 +163,7 @@ class FawryScreen extends StatelessWidget {
                   child: CowpayPaymentOptionsCard(),
                 ),
                 SizedBox(
-                  height: 20,
+                  height: 20.sp,
                 )
               ],
             )

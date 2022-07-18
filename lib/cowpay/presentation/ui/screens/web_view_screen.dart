@@ -127,7 +127,7 @@ class _WebViewScreenState extends State<WebViewScreen> {
         builder: (BuildContext context) {
           return DialogView(
             // title: "Error",
-            dialogType: DialogType.DIALOG_ERROR,
+            dialogType: DialogType.DIALOG_WARNING,
             actionText: "done",
             content: Localization().localizationMap["someThingWentWrong"],
             onCLick: (_) {
