@@ -1,7 +1,6 @@
 name: cowpay
 description: Cowpay Flutter Package
-version: 0.0.1
-author:
+version: 1.0.0
 homepage:
 
 environment:
