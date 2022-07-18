@@ -51,8 +51,13 @@ class DialogView extends StatelessWidget {
           image != null
               ? Container(
                   height: 0.1.sh,
-                  width: 0.1.sw,
-                  child: Image.asset("resources/images/$image.png"))
+                  width: 0.1.sh,
+                  child: Image.asset(
+                    "$image",
+                    package: 'cowpay',
+                    height: 0.1.sh,
+                    width: 0.1.sh,
+                  ))
               : dialogType.image != null
                   ? Container(
                       height: 0.1.sh,

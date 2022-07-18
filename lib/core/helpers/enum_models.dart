@@ -130,7 +130,10 @@ Map<String, String> localizationMapEn = {
   "back": "Back",
   "someThingWentWrong": "Something went wrong, please try again later",
   "ok": "OK",
-  "error": "Error"
+  "error": "Error",
+  "done": "Done",
+  "success": "Success",
+  "yourPaymentSuccessfullyDone": "Your Payment Successfully Done"
 };
 
 Map<String, String> localizationMapAr = {
@@ -163,5 +166,8 @@ Map<String, String> localizationMapAr = {
   "back": "رجوع",
   "someThingWentWrong": "حدث خطأ ما ، برجاء المحاولة لاحقا",
   "ok": "حسنا",
-  "error": "خطأ"
+  "error": "خطأ",
+  "done": "تم",
+  "success": "تمت بنحاح",
+  "yourPaymentSuccessfullyDone": "تمت العملية بنجاح"
 };

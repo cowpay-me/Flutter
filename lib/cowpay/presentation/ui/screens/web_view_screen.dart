@@ -108,14 +108,16 @@ class _WebViewScreenState extends State<WebViewScreen> {
         builder: (BuildContext context) {
           return DialogView(
             dialogType: DialogType.DIALOG_INFO,
-            actionText: "Done",
-            content: "Your Payment Successfully Done",
+            image: "assets/success.jpg",
+            actionText: Localization().localizationMap["done"],
+            content:
+                Localization().localizationMap["yourPaymentSuccessfullyDone"],
             onCLick: (_) {
               //TODO: do onSuccess
               Navigator.of(context).pop(payLoadModel);
             },
             mainContext: _context,
-            // title: 'Success',
+            title: Localization().localizationMap["success"],
           );
         });
   }
@@ -128,7 +130,7 @@ class _WebViewScreenState extends State<WebViewScreen> {
           return DialogView(
             // title: "Error",
             dialogType: DialogType.DIALOG_WARNING,
-            actionText: "done",
+            actionText: Localization().localizationMap["done"],
             content: Localization().localizationMap["someThingWentWrong"],
             onCLick: (_) {
               widget.onError(
