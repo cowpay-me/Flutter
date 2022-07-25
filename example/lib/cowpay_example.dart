@@ -5,17 +5,19 @@ import 'package:flutter/material.dart';
 
 // ignore: must_be_immutable
 class CowpayExample extends StatelessWidget {
+  //Transaction Data
   double amount = 2.0;
-  String customerEmail = "example@mail.com";
+  String customerEmail = "flutter@mail.com";
   String customerMobile = "01068890002";
   String description = "description";
-  String customerMerchantProfileId = "ExmpleId122345682";
+  String customerMerchantProfileId = "ExmpleId122345681";
   String customerName = "Testing";
-  String token =
-      "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiIxIiwianRpIjoiNTI2ZmM1YzNmMTU4MmNlY2RhNTUyOTNiYzcyMTdhZGFlZTE3OTk2YjgxMDlhNTUxNGY1OGNiMjc1ZmRlMzdlNDZhOTRiOWM2NzY4ZWFjNGUiLCJpYXQiOjE2NTI4ODQ3NDguNzg1Nzc3LCJuYmYiOjE2NTI4ODQ3NDguNzg1Nzg0LCJleHAiOjQ4MDg1NTgzNDguNzA0MTc1LCJzdWIiOiI4OTAiLCJzY29wZXMiOltdfQ.M6F7sUxAx8aEd6y963KEBnFkybmhbdbAaWByKfTvbKGWUMH7QgUsMWrnhVWBLqXDZctWdt6UFvi606WUNJiSmA";
-  String merchantCode = "Bi0InJ1bp5gh";
-  String merchantHash =
-      "\$2y\$10\$06g0SeTNKoFD0SU1aKcO9.ProYRS4.mk8gyUW82VUJ2KKwtiNb30G";
+
+  //Merchant data
+  String token = "token";
+  String merchantCode = "merchantCode";
+  String merchantHash = "merchantHash";
+
   @override
   Widget build(BuildContext context) {
     return Cowpay(
@@ -27,7 +29,7 @@ class CowpayExample extends StatelessWidget {
       description: description,
       customerMerchantProfileId: customerMerchantProfileId,
       merchantReferenceId: getRandString(),
-      activeEnvironment: CowpayEnvironment.staging,
+      activeEnvironment: CowpayEnvironment.production,
       merchantCode: merchantCode,
       merchantHash: merchantHash,
       token: token,
