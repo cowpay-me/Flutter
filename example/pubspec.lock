@@ -4,9 +4,11 @@ packages:
   api_manager:
     dependency: transitive
     description:
-      path: "../packages/api_manager"
-      relative: true
-    source: path
+      path: "."
+      ref: "v1.0.2"
+      resolved-ref: "1e4821708c59944307256e65550f3d680d93ea61"
+      url: "https://github.com/m0h2medtalaat/api_manager"
+    source: git
     version: "0.0.1"
   async:
     dependency: transitive
