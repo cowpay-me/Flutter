@@ -133,7 +133,8 @@ Map<String, String> localizationMapEn = {
   "error": "Error",
   "done": "Done",
   "success": "Success",
-  "yourPaymentSuccessfullyDone": "Your Payment Successfully Done"
+  "yourPaymentSuccessfullyDone": "Your Payment Successfully Done",
+  "transactionFailed": "Transaction Failed"
 };
 
 Map<String, String> localizationMapAr = {
@@ -169,5 +170,6 @@ Map<String, String> localizationMapAr = {
   "error": "خطأ",
   "done": "تم",
   "success": "تمت بنحاح",
-  "yourPaymentSuccessfullyDone": "تمت العملية بنجاح"
+  "yourPaymentSuccessfullyDone": "تمت العملية بنجاح",
+  "transactionFailed": "عملية غير ناجحة"
 };

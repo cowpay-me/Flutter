@@ -95,7 +95,7 @@ class _WebViewScreenState extends State<WebViewScreen> {
           if (model.paymentStatus == 'PAID') {
             _successDialog(context, model);
           } else {
-            _errorDialog(context);
+            _errorDialog(context, model);
           }
         });
   }
@@ -122,19 +122,18 @@ class _WebViewScreenState extends State<WebViewScreen> {
         });
   }
 
-  Future<void> _errorDialog(BuildContext _context) {
+  Future<void> _errorDialog(BuildContext _context, PayLoadModel payLoadModel) {
     return showDialog(
         context: _context,
         barrierDismissible: false,
         builder: (BuildContext context) {
           return DialogView(
-            // title: "Error",
+            title: Localization().localizationMap["error"],
             dialogType: DialogType.DIALOG_WARNING,
             actionText: Localization().localizationMap["done"],
-            content: Localization().localizationMap["someThingWentWrong"],
+            content: Localization().localizationMap["transactionFailed"],
             onCLick: (_) {
-              widget.onError(
-                  Localization().localizationMap["someThingWentWrong"]);
+              widget.onError("transactionFailed");
               Navigator.of(context).pop();
             },
             mainContext: _context,
